@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vue SPA Sample</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <nav>
+      <ul>
+        <li>
+          <a v-on:click="navigate('home')">Home</a>
+        </li>
+        <li>
+          <a v-on:click="navigate('about')">About</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div v-if="currentRoute === 'home'">
+      <h1>Welcome to the Home page!</h1>
+      <p>This is the home content.</p>
+    </div>
+
+    <div v-else-if="currentRoute === 'about'">
+      <h1>About Us</h1>
+      <p>This is the about page.</p>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        currentRoute: 'home'
+      },
+      methods: {
+        navigate(route) {
+          this.currentRoute = route;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
