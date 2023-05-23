@@ -3,8 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vue SPA</title>
+  <title>Sample SPA</title>
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
 </head>
 
 <body>
@@ -14,43 +15,28 @@
     <router-view></router-view>
   </div>
 
-  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
-  <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
   <script>
-    // Create page components
-    const Page1 = {
-      template: `
-        <div>
-          <h1>Page 1</h1>
-          <p>Welcome to Page 1</p>
-        </div>
-      `
-    }
+    const Page1 = { template: '<div>Page 1</div>' };
+    const Page2 = { template: '<div>Page 2</div>' };
 
-    const Page2 = {
-      template: `
-        <div>
-          <h1>Page 2</h1>
-          <p>Welcome to Page 2</p>
-        </div>
-      `
-    }
-
-    // Configure routes
-    const routes = [
-      { path: '/page1', component: Page1 },
-      { path: '/page2', component: Page2 }
-    ]
-
-    // Create router instance
     const router = new VueRouter({
-      routes
-    })
+      mode: 'history',
+      routes: [
+        { path: '/page1', component: Page1 },
+        { path: '/page2', component: Page2 }
+      ]
+    });
 
-    // Create Vue app
-    const app = new Vue({
-      router
-    }).$mount('#app')
+    // History replace implementation
+    const originalReplace = router.replace;
+    router.replace = function(location) {
+      originalReplace.call(this, location, () => {}, () => {});
+    };
+
+    new Vue({
+      router,
+      el: '#app'
+    });
   </script>
 </body>
 
