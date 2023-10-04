@@ -1,43 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Sample SPA</title>
-  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
-  <script src="https://unpkg.com/vue-router@3.5.2/dist/vue-router.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript">(function(w,s){var e=document.createElement("script");e.type="text/javascript";e.async=true;e.src="https://cdn.pagesense.io/js/yi4uyxu7/52f434a0c3564a10890fc437ff417788.js";var x=document.getElementsByTagName("script")[0];x.parentNode.insertBefore(e,x);})(window,"script");</script>
+    <title>Love Countdown and Popup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #countdown {
+            font-size: 24px;
+        }
+
+        #popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border: 2px solid #333;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        #popup h2 {
+            color: #333;
+        }
+
+        #popup p {
+            color: #666;
+        }
+
+        #popup button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
-
 <body>
-  <div id="app">
-    <router-link to="/page1">Page 1</router-link>
-    <router-link to="/page2">Page 2</router-link>
-    <router-view></router-view>
-  </div>
+    <div id="loveText">
+        <p>About Love:</p>
+        <p>Love is a beautiful feeling.</p>
+        <p>It brings joy and happiness to our lives.</p>
+    </div>
+    <div id="countdown">3</div>
+    <div id="popup">
+        <h2>Title</h2>
+        <p>Body</p>
+        <button id="callNow">Call Now</button>
+    </div>
+    <script>
+        let countdown = 3;
+        const countdownElement = document.getElementById("countdown");
+        const popup = document.getElementById("popup");
 
-  <script>
-    const Page1 = { template: '<div>Page 1</div>' };
-    const Page2 = { template: '<div>Page 2</div>' };
+        // Countdown function
+        function startCountdown() {
+            countdownElement.innerText = countdown;
+            countdown--;
 
-    const router = new VueRouter({
-      mode: 'history',
-      routes: [
-        { path: '/page1', component: Page1 },
-        { path: '/page2', component: Page2 }
-      ]
-    });
+            if (countdown < 0) {
+                countdownElement.style.display = "none";
+                fetchData();
+            } else {
+                setTimeout(startCountdown, 1000);
+            }
+        }
 
-    // History replace implementation
-    const originalReplace = router.replace;
-    router.replace = function(location) {
-      originalReplace.call(this, location, () => {}, () => {});
-    };
+        // Fetch data from AJAX
+        function fetchData() {
+            fetch('https://jsonplaceholder.typicode.com/posts/1')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    displayPopup(data.title, data.body);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    displayPopup('Error', 'Failed to fetch data.');
+                });
+        }
 
-    new Vue({
-      router,
-      el: '#app'
-    });
-  </script>
+        // Display the popup
+        function displayPopup(title, body) {
+            const popupTitle = document.querySelector("#popup h2");
+            const popupBody = document.querySelector("#popup p");
+            const callNowButton = document.querySelector("#callNow");
+
+            popupTitle.innerText = title;
+            popupBody.innerText = body;
+            popup.style.display = "block";
+
+            callNowButton.addEventListener("click", () => {
+                alert("Calling now...");
+            });
+        }
+
+        startCountdown();
+    </script>
 </body>
-
 </html>
